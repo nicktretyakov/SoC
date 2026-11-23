@@ -1,0 +1,12 @@
+# Tells cargo: in this folder always use the Xtensa Rust fork installed via `espup install`.
+# That fork already ships precompiled `core` and `alloc` for the `xtensa-esp32-espidf` target.
+#
+# NOTE on `build-std`:
+#   The user-facing note in the README says "build-std is not needed" because `core`/`alloc`
+#   come from this fork. That is correct for `core`/`alloc`. However, `std` for the
+#   `*-espidf` target is NOT precompiled — it is built from source against the configured
+#   ESP-IDF SDK, so `.cargo/config.toml` still sets `build-std = ["std", "panic_abort"]`.
+#   This is the standard, working `esp-idf-template` setup and is what makes the project
+#   actually flashable. See README -> "Build" for the full story.
+[toolchain]
+channel = "esp"

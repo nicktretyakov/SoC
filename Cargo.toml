@@ -1,0 +1,48 @@
+[package]
+name = "esp32-ml-activity"
+version = "0.1.0"
+edition = "2021"
+authors = ["Activity Recognition <esp32@example.com>"]
+description = "ESP32 + MPU6050 activity recognition (rest / walk / run) with k-NN and smartcore decision tree, streamed over Wi-Fi."
+rust-version = "1.75"
+
+[[bin]]
+name = "esp32-ml-activity"
+path = "src/main.rs"
+
+[lib]
+name = "esp32_ml_activity"
+path = "src/lib.rs"
+harness = false
+
+[dependencies]
+# --- ESP32 framework (esp-idf v5.1.x aligned set) ---
+esp-idf-sys = { version = "0.34", features = ["binstart"] }
+esp-idf-hal = "0.43"
+esp-idf-svc = "0.48"
+
+# --- logging / errors ---
+log = { version = "0.4", default-features = false }
+anyhow = { version = "1", default-features = false, features = ["std"] }
+
+# --- serialization ---
+serde = { version = "1", default-features = false, features = ["derive"] }
+serde_json = { version = "1", default-features = false, features = ["std"] }
+
+# --- machine learning (decision tree from smartcore; k-NN is hand-rolled) ---
+smartcore = { version = "0.3.2", default-features = false }
+# num-traits is pulled transitively by smartcore; we don't depend on it directly.
+
+[build-dependencies]
+embuild = "0.32"
+
+[dev-dependencies]
+# host-side unit tests for the pure-Rust ML logic (no esp-idf needed at test time
+# only if the crate is built for a host target with esp-idf imports gated out).
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

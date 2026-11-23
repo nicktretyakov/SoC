@@ -1,0 +1,1 @@
+error: custom toolchain 'esp' specified in override file '/mnt/samsung/RUST/soc/esp32-ml-activity/rust-toolchain.toml' is not installed

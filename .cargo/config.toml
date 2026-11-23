@@ -1,0 +1,24 @@
+[build]
+# Xtensa GCC + ESP-IDF std target. The Xtensa fork of Rust (channel = "esp")
+# provides `core`/`alloc`; `std` is rebuilt against the configured ESP-IDF.
+target = "xtensa-esp32-espidf"
+
+[target.xtensa-esp32-espidf]
+# ldproxy resolves the Xtensa linker; espflash flashes + opens a monitor.
+linker = "ldproxy"
+runner = "espflash --monitor"
+rustflags = ["--cfg", "espidf_time64"]
+
+# `std` for the *-espidf target is built from source against ESP-IDF, so we must
+# tell cargo to build it (and panic_abort). This is the canonical esp-idf-template
+# configuration and is required for a flashable binary.
+[unstable]
+build-std = ["std", "panic_abort"]
+build-std-features = ["panic_immediate_abort"]
+
+[env]
+# Which chip and which ESP-IDF version embuild should fetch/build against.
+MCU = "esp32"
+ESP_IDF_VERSION = "v5.1.3"
+
+# Keep all build artefacts under target/ (default).
